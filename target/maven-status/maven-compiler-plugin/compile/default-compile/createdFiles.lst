@@ -19,6 +19,7 @@ com/phucch/annotations/HttpQuery.class
 com/phucch/annotations/HttpPath.class
 com/phucch/builder/StringUtil.class
 com/phucch/builder/ApiCallback.class
+com/phucch/annotations/HttpBody.class
 com/phucch/builder/ProgressRequestBody.class
 com/phucch/builder/GzipRequestInterceptor.class
 com/phucch/annotations/HttpHeader.class

@@ -2,10 +2,7 @@ package com.phucch.builder;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.phucch.annotations.HttpForm;
-import com.phucch.annotations.HttpHeader;
-import com.phucch.annotations.HttpPath;
-import com.phucch.annotations.HttpQuery;
+import com.phucch.annotations.*;
 import com.phucch.enums.Method;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Response;
@@ -129,24 +126,32 @@ class Builder implements IBuilder {
         Field[] fields = objClass.getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
+            Object value = field.get(obj);
+            if(value == null){
+                continue;
+            }
             HttpHeader tagHeader = field.getAnnotation(HttpHeader.class);
             if (tagHeader != null && field.getType() != Object.class) {
-                String header = String.valueOf(field.get(obj));
+                String header = String.valueOf(value);
                 this.headers.put(tagHeader.name(), header);
             }
             HttpQuery tagQuery = field.getAnnotation(HttpQuery.class);
             if (tagQuery != null && field.getType() != Object.class) {
-                String query = String.valueOf(field.get(obj));
+                String query = String.valueOf(value);
                 this.queries.add(new Pair(tagQuery.name(), query));
             }
             HttpPath tagPath = field.getAnnotation(HttpPath.class);
             if (tagPath != null && field.getType() != Object.class) {
-                String path = String.valueOf(field.get(obj));
+                String path = String.valueOf(value);
                 this.paths.add(new Pair(tagPath.name(), path));
             }
             HttpForm tagForm = field.getAnnotation(HttpForm.class);
             if (tagForm != null) {
-                this.formParams.put(tagForm.name(), field.get(obj));
+                this.formParams.put(tagForm.name(), value);
+            }
+            HttpBody tagBody = field.getAnnotation(HttpBody.class);
+            if (tagBody != null){
+                this.body = value;
             }
         }
         return this;
